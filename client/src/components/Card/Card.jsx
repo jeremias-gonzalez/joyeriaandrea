@@ -74,12 +74,12 @@ const Card = ({ product }) => {
         <div className="p-4">
             <img
                 src={product.image}
-                alt={product.name}
+               
                 className="w-96 h-96 mb-4 rounded-md"
                 onClick={() => setShowModal(true)} // Abre el modal al hacer clic en la imagen
             />
             <h3 className="text-lg font-semibold">{product.name}</h3>
-            <p className="text-gray-700">${product.price}</p>
+            <p className="text-gray-700">{product.price}</p>
             <button
                 onClick={() => setShowModal(true)} // Abre el modal al hacer clic en el botón
                 className="mt-2  text-custom-brown underline py-2  rounded-xl hover:bg-blue-600 transition-colors duration-300"
@@ -150,7 +150,7 @@ const Card = ({ product }) => {
                         </div>
 
                         <h3 className="text-lg font-semibold mt-4">{product.name}</h3>
-                        <p className="text-gray-700">${product.price}</p>
+                        <p className="text-gray-700">{product.price}</p>
 
                         {/* Incremento/Decremento de cantidad */}
                         <div className="flex items-center mt-4 my-4">
