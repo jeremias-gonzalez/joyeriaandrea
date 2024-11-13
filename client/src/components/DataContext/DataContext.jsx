@@ -53,7 +53,8 @@ export const DataProvider = ({ children }) => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/products');
+        const apiUrl = import.meta.env.VITE_REACT_APP_BACKEND_BASEURL;
+        const response = await axios.get(`${apiUrl}/api/products`);
         // Adaptar los datos si es necesario
         const formattedProducts = response.data.map((row, index) => ({
           // id: index + 1,
