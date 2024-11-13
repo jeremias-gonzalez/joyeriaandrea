@@ -1,4 +1,3 @@
-// Importar Express
 require('dotenv').config();
 const express = require('express');
 const { google } = require('googleapis');
@@ -7,13 +6,18 @@ const app = express();
 
 // Definir el puerto
 const PORT = 3000;
-const allowedOrigins = [
-  process.env.FRONTEND_URL, 
-];
-app.use(express.json());
-app.use(cors({ origin: 'http://localhost:5173' }));
 
-// Servir la carpeta 'public' como archivos estáticos
+// Configurar CORS para aceptar solicitudes desde el frontend especificado en el .env
+const allowedOrigins = [process.env.FRONTEND_URL];
+app.use(cors({
+  origin: allowedOrigins,
+  methods: ['GET'], // Métodos permitidos
+  credentials: true // Si necesitas enviar cookies u otras credenciales
+}));
+
+app.use(express.json());
+
+// Servir la carpeta 'public' como archivos estáticos para que las imágenes sean accesibles
 app.use('/images', express.static('public'));
 
 // Autenticación con Google Sheets
@@ -24,7 +28,7 @@ const client = new google.auth.JWT(
   ['https://www.googleapis.com/auth/spreadsheets']
 );
 
-client.authorize((err, tokens) => {
+client.authorize((err) => {
   if (err) {
     console.error('Error connecting to Google Sheets:', err);
     return;
@@ -46,7 +50,7 @@ app.get('/api/test', (req, res) => {
 app.get('/api/products', async (req, res) => {
   const gsapi = google.sheets({ version: 'v4', auth: client });
   const options = {
-    spreadsheetId: '18-RX4TH_f62b-2FMoeurqkAcwoVWiaj6aedIasqU4Ng',
+    spreadsheetId: '18-RX4TH_f62b-2FMoeurqkAcwoVWiaj6aedIasqU4Ng', // ID de Google Sheets
     range: 'Hoja 1!A2:G',
   };
 
@@ -54,7 +58,7 @@ app.get('/api/products', async (req, res) => {
     const data = await gsapi.spreadsheets.values.get(options);
     const rows = data.data.values;
 
-    console.log('Data from Google Sheets:', data);
+    console.log('Data from Google Sheets:', rows); // Imprimir filas obtenidas
 
     if (!rows || rows.length === 0) {
       return res.status(404).send('No data found');

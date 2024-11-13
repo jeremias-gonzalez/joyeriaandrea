@@ -54,24 +54,27 @@ export const DataProvider = ({ children }) => {
     const fetchProducts = async () => {
       try {
         const apiUrl = import.meta.env.VITE_REACT_APP_BACKEND_BASEURL;
-        const response = await axios.get(`${apiUrl}/api/products`);
-        // Adaptar los datos si es necesario
+        const response = await axios.get(`${apiUrl}/api/products`, { withCredentials: true });
+     
+        console.log('Datos recibidos del bckend:', response.data); // Verifica aquí
+  
         const formattedProducts = response.data.map((row, index) => ({
           // id: index + 1,
-          name: row[0], // Asume que la primera columna es el nombre
-          price: row[5], // Asume que la segunda columna es el precio
-          // description: row[2], // Tercera columna para la descripción
-           image: row[6], // Cuarta columna para la imagen principal
-          // images: row.slice(4), // Imágenes adicionales en las siguientes columnas
+          name: row[0],
+          price: row[5],
+          //description: row[2],
+          image: `${apiUrl}/images/${row[6]}`,
         }));
+  
         setProducts(formattedProducts);
       } catch (error) {
         console.error('Error al obtener productos:', error);
       }
     };
-
+  
     fetchProducts();
   }, []);
+  
 
   return (
     <DataContext.Provider
